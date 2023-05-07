@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	"go-jwt-rest-mongodb/database"
+
 	"github.com/golang-jwt/jwt"
+	"github.com/joho/godotenv"
 )
 
 var mySigningKey = []byte("my-secret-key")
@@ -75,6 +79,19 @@ func GenerateJWT() (string, error) {
 }
 
 func main() {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Printf("Failed to load environment: %s", err.Error())
+	}
+
+	client := database.ConnectMongoClient()
+
 	fmt.Println("Starting server on http://localhost:8080")
 	handleRequest()
+
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			panic(err)
+		}
+	}()
 }

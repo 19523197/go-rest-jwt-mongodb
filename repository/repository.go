@@ -7,11 +7,11 @@ import (
 )
 
 type Repository struct {
-	userRepo *userRepository.UserRepository
+	UserRepo *userRepository.UserRepository
 }
 
 func InitRepository(mongo *mongo.Client) *Repository {
 	return &Repository{
-		userRepo: userRepository.InitUserRepository(mongo),
+		UserRepo: userRepository.InitUserRepository(mongo),
 	}
 }

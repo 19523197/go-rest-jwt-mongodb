@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"go-jwt-rest-mongodb/database"
+	"go-jwt-rest-mongodb/repository"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/joho/godotenv"
@@ -52,7 +53,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func handleRequest() {
+func handleRequest(r *repository.Repository) {
 	http.Handle("/", isAuthorized(homePage))
 	http.HandleFunc("/login", login)
 
@@ -85,9 +86,10 @@ func main() {
 	}
 
 	client := database.ConnectMongoClient()
+	repository := repository.InitRepository(client)
 
 	fmt.Println("Starting server on http://localhost:8080")
-	handleRequest()
+	handleRequest(repository)
 
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {

@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"go-jwt-rest-mongodb/model"
 	"go-jwt-rest-mongodb/repository"
 	"log"
 	"net/http"
@@ -39,6 +40,18 @@ func UserHandler(repo *repository.Repository) http.Handler {
 			w.Write(res)
 
 			return
+		} else if r.Method == "POST" {
+			newUser := model.User{Name: r.URL.Query().Get("name")}
+			err := repo.UserRepo.InsertUser(newUser)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			res, err := json.Marshal("Success")
+			w.WriteHeader(400)
+			w.Write(res)
+
 		}
 	})
 

@@ -14,7 +14,7 @@ type UserRepository struct {
 
 func InitUserRepository(db *mongo.Client) *UserRepository {
 	return &UserRepository{
-		DB: db.Database("belajar-mongodb"),
+		DB: db.Database("primary"),
 	}
 }
 
